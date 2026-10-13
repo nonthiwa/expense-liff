@@ -116,7 +116,23 @@ input { font: inherit; color: inherit; }
 .key svg { width: 24px; height: 24px; vertical-align: middle; }
 
 .save { display: block; width: 100%; height: 52px; margin: 12px 0 8px; border-radius: 14px; background: var(--green);
-  color: #fff; font-weight: 600; font-size: 16px; transition: opacity .15s; }
+  color: #fff; font-weight: 600; font-size: 16px; transition: opacity .15s;
+  position: sticky; bottom: calc(68px + var(--safe-b)); z-index: 2; box-shadow: 0 0 0 8px var(--page); }
+/* จอเตี้ย (เช่น iPhone ในแอป LINE): บีบระยะให้ปุ่มบันทึกอยู่ในจอโดยไม่ต้องเลื่อน */
+@media (max-height: 860px) {
+  .top { padding-top: 10px; }
+  .dates { margin-top: 6px; }
+  .amount { margin: 8px 0 0; min-height: 62px; }
+  .amount .val { font-size: 50px; }
+  .amount .val.long { font-size: 40px; }
+  .note { padding: 4px 0 8px; }
+  .cats { margin: 12px 0 10px; gap: 6px; }
+  .cat { padding: 6px 2px 5px; }
+  .cat .e { font-size: 20px; }
+  .keys { gap: 6px; }
+  .key { height: 44px; font-size: 22px; }
+  .save { height: 48px; margin-top: 10px; }
+}
 .save:disabled { background: var(--track); color: var(--muted); cursor: default; }
 
 /* ---------- summary view ---------- */
@@ -303,8 +319,8 @@ h2 { font-size: 15px; font-weight: 600; margin: 26px 0 10px; }
 /* =====================================================================
    ตั้งค่า 2 บรรทัดนี้ให้ตรงกับของคุณ
    ===================================================================== */
-const LIFF_ID = '2011992127-ggD39O1P';                       // เช่น 2001234567-AbCdEfGh
-const API_URL = 'https://script.google.com/macros/s/AKfycbwWsheicaHrrVdB_cON9QHeDY21pQGzbAspOyrqLKsKVPcmFHIhUhkgRICMq6uLUnhI/exec';   // URL เดียวกับ Webhook ของ LINE
+const LIFF_ID = '2011992127-ggD39O1P';
+const API_URL = 'https://script.google.com/macros/s/AKfycbwWsheicaHrrVdB_cON9QHeDY21pQGzbAspOyrqLKsKVPcmFHIhUhkgRICMq6uLUnhI/exec';
 
 /* เปิดด้วย ?demo=1 ท้าย URL เพื่อดูหน้าตาด้วยข้อมูลตัวอย่าง (ไม่ต้องต่อ LINE) */
 const DEMO = new URLSearchParams(location.search).has('demo');
