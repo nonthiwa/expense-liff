@@ -208,10 +208,43 @@ h2 { font-size: 15px; font-weight: 600; margin: 26px 0 10px; }
 .skel { height: 14px; border-radius: 7px; background: var(--track); margin: 10px 0; animation: pulse 1.2s ease-in-out infinite; }
 @keyframes pulse { 50% { opacity: .5; } }
 
+/* ---------- subscription ---------- */
+:root { --c-sub-work: var(--c-travel); --c-sub-fun: var(--c-fun); --c-sub-other: var(--c-other); }
+.spend .big .per { font-size: 18px; font-weight: 500; color: var(--ink-2); margin-left: 4px; }
+.sec-h { display: flex; align-items: center; justify-content: space-between; margin: 26px 0 6px; }
+.sec-h h2 { margin: 0; }
+.btn.small { height: 36px; padding: 0 14px; font-size: 14px; border-radius: 10px; }
+.sub { --c: var(--c-other); display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; padding: 12px 0;
+  border-bottom: 1px solid var(--line); }
+.sub .e { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; flex: none;
+  font-family: var(--num); font-weight: 600; font-size: 18px; color: var(--c);
+  background: color-mix(in srgb, var(--c) 15%, transparent); }
+.sub .t { flex: 1; min-width: 0; }
+.sub .t b { display: block; font-weight: 600; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sub .t span { display: block; color: var(--muted); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sub .when { text-align: right; flex: none; line-height: 1.3; }
+.sub .when b { display: block; font-family: var(--num); font-weight: 600; font-size: 15px; }
+.sub .when span { font-size: 12px; color: var(--muted); }
+.sub .when span.warn { color: var(--warn); font-weight: 600; }
+.sub .when span.crit { color: var(--crit); font-weight: 600; }
+.note-line { color: var(--muted); font-size: 12px; margin: 14px 0 0; }
+.f { display: block; margin-top: 14px; }
+.f > span { display: block; font-size: 13px; color: var(--ink-2); margin-bottom: 6px; }
+.f input { width: 100%; height: 46px; border: 0; border-radius: 12px; padding: 0 14px; background: var(--page);
+  box-shadow: inset 0 0 0 1px var(--line); outline: none; font-size: 16px; }
+.f input:focus { box-shadow: inset 0 0 0 2px var(--green); }
+.f input.num { font-family: var(--num); font-weight: 600; font-size: 20px; }
+.f2 { display: grid; grid-template-columns: 1fr 1.2fr; gap: 10px; }
+.seg { display: flex; gap: 4px; padding: 4px; border-radius: 12px; background: var(--page); box-shadow: inset 0 0 0 1px var(--line); }
+.seg button { flex: 1; height: 38px; border-radius: 9px; font-size: 14px; color: var(--ink-2); white-space: nowrap; }
+.seg button[aria-pressed="true"] { background: var(--card); color: var(--ink); font-weight: 600; box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+.sheet .row .btn.danger { flex: 0 0 auto; padding: 0 16px; }
+.cancel-link { display: inline-block; margin-top: 4px; font-size: 13px; color: var(--crit); }
+
 /* ---------- nav ---------- */
 .nav { position: fixed; left: 0; right: 0; bottom: 0; background: var(--card); border-top: 1px solid var(--line);
   padding-bottom: var(--safe-b); z-index: 5; }
-.nav .in { max-width: 480px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; }
+.nav .in { max-width: 480px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); }
 .nav button { height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
   font-size: 12px; color: var(--muted); }
 .nav button svg { width: 24px; height: 24px; }
@@ -220,7 +253,8 @@ h2 { font-size: 15px; font-weight: 600; margin: 26px 0 10px; }
 /* ---------- sheet & toast ---------- */
 .scrim { position: fixed; inset: 0; background: rgba(10, 16, 24, .45); opacity: 0; pointer-events: none; transition: opacity .2s; z-index: 10; }
 .sheet { position: fixed; left: 0; right: 0; bottom: 0; z-index: 11; background: var(--card); border-radius: 20px 20px 0 0;
-  padding: 20px 20px calc(20px + var(--safe-b)); transform: translateY(105%); transition: transform .25s ease; max-width: 480px; margin: 0 auto; }
+  padding: 20px 20px calc(20px + var(--safe-b)); transform: translateY(105%); transition: transform .25s ease; max-width: 480px; margin: 0 auto;
+  max-height: 90dvh; overflow-y: auto; overscroll-behavior: contain; }
 .open .scrim { opacity: 1; pointer-events: auto; }
 .open .sheet { transform: none; }
 .sheet h3 { margin: 0 0 4px; font-size: 17px; }
@@ -294,6 +328,11 @@ h2 { font-size: 15px; font-weight: 600; margin: 26px 0 10px; }
     </div>
     <div id="sumBody"></div>
   </main>
+
+  <main id="viewSubs" hidden>
+    <div class="month-nav"><h1 style="margin:0 auto">Subscription</h1></div>
+    <div id="subsBody"></div>
+  </main>
 </div>
 
 <nav class="nav" aria-label="เมนู">
@@ -305,6 +344,10 @@ h2 { font-size: 15px; font-weight: 600; margin: 26px 0 10px; }
     <button id="tabSum">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 20V10m6 10V4m6 16v-7m4 7H3"/></svg>
       สรุปรายเดือน
+    </button>
+    <button id="tabSubs">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+      Subscription
     </button>
   </div>
 </nav>
@@ -682,21 +725,25 @@ function toast(msg, err) {
   clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), err ? 4000 : 2200);
 }
 
+const VIEWS = { add: ['viewAdd', 'tabAdd'], sum: ['viewSum', 'tabSum'], subs: ['viewSubs', 'tabSubs'] };
+
 function go(view) {
   S.view = view;
-  $('viewAdd').hidden = view !== 'add';
-  $('viewSum').hidden = view !== 'sum';
-  $('tabAdd').toggleAttribute('aria-current', view === 'add');
-  $('tabSum').toggleAttribute('aria-current', view === 'sum');
-  if (view === 'add') $('tabAdd').setAttribute('aria-current', 'page');
-  if (view === 'sum') $('tabSum').setAttribute('aria-current', 'page');
+  Object.keys(VIEWS).forEach(k => {
+    $(VIEWS[k][0]).hidden = k !== view;
+    if (k === view) $(VIEWS[k][1]).setAttribute('aria-current', 'page');
+    else $(VIEWS[k][1]).removeAttribute('aria-current');
+  });
+  if (view === 'subs' && !S.subs) loadSubs();
   window.scrollTo(0, 0);
   render();
 }
 
 function render() {
   renderHeader();
-  if (S.view === 'add') renderAdd(); else renderSum();
+  if (S.view === 'add') renderAdd();
+  else if (S.view === 'sum') renderSum();
+  else renderSubs();
 }
 
 function bind() {
@@ -717,6 +764,7 @@ function bind() {
   $('save').onclick = save;
   $('tabAdd').onclick = () => go('add');
   $('tabSum').onclick = () => go('sum');
+  $('tabSubs').onclick = () => go('subs');
   $('prevM').onclick = () => { S.month = shiftMonth(S.month, -1); if (!S.data[S.month]) loadMonth(S.month); render(); };
   $('nextM').onclick = () => { S.month = shiftMonth(S.month, 1); if (!S.data[S.month]) loadMonth(S.month); render(); };
   $('scrim').onclick = closeSheet;
@@ -763,15 +811,157 @@ async function init() {
     $('hello').textContent = 'สวัสดีค่ะ คุณ' + profile.displayName;
     if (profile.pictureUrl) $('avatar').innerHTML = `<img class="avatar" src="${esc(profile.pictureUrl)}" alt="">`;
     render();
+    if (startTab() === 'subs') go('subs');
     await loadMonth(S.month);
   } catch (e) {
     fatal('เปิดสมุดรายจ่ายไม่สำเร็จค่ะ', e.message);
   }
 }
 
+/* ---------------- subscription ---------------- */
+const SUB_CATS = [{ v: 'งาน', k: 'work' }, { v: 'บันเทิง', k: 'fun' }, { v: 'อื่น ๆ', k: 'other' }];
+const subCatKey = c => (SUB_CATS.find(x => x.v === c) || SUB_CATS[2]).k;
+const subPrice = s => (s.currency === 'USD' ? '$' : '฿') + nf.format(s.price) + (s.cycle === 'รายปี' ? '/ปี' : '/เดือน');
+const daysUntil = iso => Math.round((parseIso(iso) - parseIso(todayIso())) / 86400000);
+
+function startTab() {
+  const q = new URLSearchParams(location.search);
+  if (q.get('tab')) return q.get('tab');
+  const m = /tab=(\w+)/.exec(decodeURIComponent(q.get('liff.state') || ''));
+  return m ? m[1] : '';
+}
+
+async function loadSubs() {
+  try { const d = await api('subs'); S.subs = d.subs; S.rate = d.rate; }
+  catch (e) { toast(errMsg(e), true); S.subs = S.subs || []; }
+  render();
+}
+
+function renderSubs() {
+  const body = $('subsBody');
+  if (!S.subs) {
+    body.innerHTML = '<div class="spend"><div class="skel" style="width:40%"></div><div class="skel" style="height:40px;width:55%"></div><div class="skel"></div></div>';
+    return;
+  }
+  const subs = S.subs, rate = S.rate || 33;
+  const thb = s => s.price * (s.currency === 'USD' ? rate : 1);
+  const perMonth = subs.reduce((t, s) => t + (s.cycle === 'รายปี' ? thb(s) / 12 : thb(s)), 0);
+  const hasUSD = subs.some(s => s.currency === 'USD');
+
+  let html = `<section class="spend"><div class="lbl">จ่ายค่า subscription ประมาณ</div>
+    <div class="big"><small>฿</small>${nf.format(Math.round(perMonth))}<span class="per">/เดือน</span></div>
+    <div class="facts" style="margin-top:4px">
+      <div><b>${subs.length}</b>รายการ</div>
+      <div><b>${baht(Math.round(perMonth * 12))}</b>ต่อปี</div>
+      ${hasUSD ? `<div><b>฿${nf.format(rate)}</b>ต่อ 1 ดอลลาร์ (ประมาณ)</div>` : ''}
+    </div></section>`;
+
+  html += '<div class="sec-h"><h2>ต่ออายุครั้งถัดไป</h2><button class="btn small" id="addSub">เพิ่มรายการ</button></div>';
+
+  if (!subs.length) {
+    html += `<div class="empty"><div class="e">🔔</div><p>ยังไม่มีรายการเลยค่ะ<br>เพิ่มบริการที่จ่ายรายเดือนหรือรายปีไว้ เดี๋ยวเลขาเตือนให้ก่อนตัดเงินนะคะ</p></div>`;
+  } else {
+    html += subs.map(s => {
+      const d = daysUntil(s.next);
+      const lvl = d <= 1 ? 'crit' : d <= 7 ? 'warn' : '';
+      const when = d <= 0 ? 'วันนี้' : d === 1 ? 'พรุ่งนี้' : 'อีก ' + d + ' วัน';
+      const meta = [subPrice(s)].concat(s.card ? ['บัตร ' + s.card] : []).join('  ·  ');
+      return `<button class="sub" data-id="${esc(s.id)}" style="--c: var(--c-sub-${subCatKey(s.category)})">
+        <span class="e" aria-hidden="true">${esc(s.name.trim().charAt(0).toUpperCase())}</span>
+        <span class="t"><b>${esc(s.name)}</b><span>${esc(meta)}</span></span>
+        <span class="when"><b>${shortDate(s.next)}</b><span class="${lvl}">${when}</span></span></button>`;
+    }).join('');
+    html += '<p class="note-line">เลขาจะทักเตือนก่อนวันตัดเงิน 7 วัน และ 1 วันค่ะ</p>';
+  }
+  body.innerHTML = html;
+  $('addSub').onclick = () => openSubForm(null);
+  body.querySelectorAll('.sub').forEach(b => b.onclick = () => openSubForm(S.subs.find(s => s.id === b.dataset.id)));
+}
+
+function segHtml(name, options, current) {
+  return `<div class="seg" data-name="${name}" role="group">` + options.map(o =>
+    `<button type="button" data-v="${esc(o.v)}" aria-pressed="${o.v === current}">${esc(o.label || o.v)}</button>`).join('') + '</div>';
+}
+
+function openSubForm(sub) {
+  const s = sub || { name: '', price: '', currency: 'THB', cycle: 'รายเดือน', next: addDays(todayIso(), 30), card: '', cancelUrl: '', category: 'อื่น ๆ' };
+  const cards = [...new Set((S.subs || []).map(x => x.card).filter(Boolean))];
+  openSheet(`<h3>${sub ? 'แก้ไข' : 'เพิ่ม'} subscription</h3>
+    ${sub && sub.cancelUrl ? `<a class="cancel-link" href="${esc(sub.cancelUrl)}" target="_blank" rel="noopener">ไปหน้ายกเลิก ${esc(sub.name)}</a>` : ''}
+    <label class="f"><span>ชื่อบริการ</span><input id="fName" maxlength="60" placeholder="เช่น Claude Pro" value="${esc(s.name)}"></label>
+    <div class="f2">
+      <label class="f"><span>ราคา</span><input id="fPrice" class="num" type="number" inputmode="decimal" min="0" step="0.01" value="${s.price === '' ? '' : s.price}" placeholder="0"></label>
+      <div class="f"><span>สกุลเงิน</span>${segHtml('currency', [{ v: 'THB', label: '฿ บาท' }, { v: 'USD', label: '$ ดอลลาร์' }], s.currency)}</div>
+    </div>
+    <div class="f"><span>รอบจ่าย</span>${segHtml('cycle', [{ v: 'รายเดือน' }, { v: 'รายปี' }], s.cycle)}</div>
+    <label class="f"><span>ต่ออายุครั้งถัดไป</span><input id="fNext" type="date" value="${esc(s.next)}"></label>
+    <div class="f"><span>หมวด</span>${segHtml('category', SUB_CATS, s.category)}</div>
+    <label class="f"><span>จ่ายด้วยบัตร (ไม่ใส่ก็ได้)</span><input id="fCard" maxlength="40" list="cardList" placeholder="เช่น KBank" value="${esc(s.card)}">
+      <datalist id="cardList">${cards.map(c => `<option value="${esc(c)}">`).join('')}</datalist></label>
+    <label class="f"><span>ลิงก์หน้ายกเลิก (ไม่ใส่ก็ได้)</span><input id="fUrl" type="url" inputmode="url" placeholder="https://" value="${esc(s.cancelUrl)}"></label>
+    <div class="row">
+      ${sub ? '<button class="btn danger" id="fDel">ลบ</button>' : ''}
+      <button class="btn ghost" id="cancel">ยกเลิก</button>
+      <button class="btn" id="fSave">บันทึก</button>
+    </div>`);
+
+  const val = {};
+  $('sheet').querySelectorAll('.seg').forEach(g => {
+    val[g.dataset.name] = g.querySelector('[aria-pressed="true"]').dataset.v;
+    g.onclick = e => {
+      const b = e.target.closest('button'); if (!b) return;
+      g.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+      val[g.dataset.name] = b.dataset.v;
+    };
+  });
+  $('cancel').onclick = closeSheet;
+  $('fSave').onclick = async () => {
+    const name = $('fName').value.trim(), price = Number($('fPrice').value), next = $('fNext').value;
+    const url = $('fUrl').value.trim();
+    if (!name) return toast('ใส่ชื่อบริการก่อนนะคะ', true);
+    if (!($('fPrice').value !== '' && price >= 0)) return toast('ใส่ราคาก่อนนะคะ', true);
+    if (!next) return toast('เลือกวันต่ออายุก่อนนะคะ', true);
+    if (url && !/^https?:\/\//.test(url)) return toast('ลิงก์ต้องขึ้นต้นด้วย https:// นะคะ', true);
+    $('fSave').disabled = true;
+    try {
+      const d = await api('subSave', { sub: Object.assign({ id: sub ? sub.id : '', name, price, next, card: $('fCard').value.trim(), cancelUrl: url }, val) });
+      S.subs = d.subs; S.rate = d.rate;
+      closeSheet(); toast((sub ? 'แก้ไข ' : 'เพิ่ม ') + name + ' แล้วค่ะ'); render();
+    } catch (e) { toast(errMsg(e), true); $('fSave').disabled = false; }
+  };
+  if (sub) $('fDel').onclick = async () => {
+    if ($('fDel').dataset.sure !== '1') { $('fDel').dataset.sure = '1'; $('fDel').textContent = 'กดอีกครั้งเพื่อลบ'; return; }
+    $('fDel').disabled = true;
+    try {
+      const d = await api('subDelete', { id: sub.id });
+      S.subs = d.subs; S.rate = d.rate;
+      closeSheet(); toast('ลบ ' + sub.name + ' แล้วค่ะ'); render();
+    } catch (e) { toast(errMsg(e), true); $('fDel').disabled = false; }
+  };
+}
+
 /* ---------------- demo data ---------------- */
 let demoDB = null;
+let demoSubs = null;
+function demoSubsApi(action, p) {
+  if (!demoSubs) demoSubs = [
+    { id: 's1', name: 'Claude Pro', price: 20, currency: 'USD', cycle: 'รายเดือน', next: addDays(todayIso(), 1), card: 'KBank', cancelUrl: 'https://claude.ai/settings', category: 'งาน' },
+    { id: 's2', name: 'Netflix', price: 419, currency: 'THB', cycle: 'รายเดือน', next: addDays(todayIso(), 6), card: 'SCB', cancelUrl: '', category: 'บันเทิง' },
+    { id: 's3', name: 'Spotify', price: 149, currency: 'THB', cycle: 'รายเดือน', next: addDays(todayIso(), 15), card: 'KBank', cancelUrl: '', category: 'บันเทิง' },
+    { id: 's4', name: 'iCloud+', price: 35, currency: 'THB', cycle: 'รายเดือน', next: addDays(todayIso(), 22), card: 'KBank', cancelUrl: '', category: 'อื่น ๆ' },
+    { id: 's5', name: 'Canva Pro', price: 3000, currency: 'THB', cycle: 'รายปี', next: addDays(todayIso(), 140), card: 'SCB', cancelUrl: '', category: 'งาน' },
+  ];
+  if (action === 'subSave') {
+    const s = Object.assign({}, p.sub);
+    if (s.id) demoSubs = demoSubs.map(x => x.id === s.id ? s : x); else demoSubs.push(Object.assign(s, { id: 'n' + Date.now() }));
+  }
+  if (action === 'subDelete') demoSubs = demoSubs.filter(x => x.id !== p.id);
+  const subs = demoSubs.slice().sort((a, b) => a.next.localeCompare(b.next));
+  return new Promise(ok => setTimeout(() => ok({ subs: JSON.parse(JSON.stringify(subs)), rate: 33 }), 250));
+}
+
 function demoApi(action, p) {
+  if (/^sub/.test(action)) return demoSubsApi(action, p);
   if (!demoDB) {
     demoDB = { budget: 12000, items: [] };
     const t = new Date(), keys = ['food', 'food', 'food', 'drink', 'drink', 'travel', 'travel', 'shopping', 'fun', 'bills', 'health'];
